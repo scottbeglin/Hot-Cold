@@ -15,6 +15,10 @@ $(document).ready(function () {
     var counter = 20;
     $('#count').text(counter);
 
+    // Function to start a new game
+    function newGame() {
+        document.location.reload(true);
+    }
 
     // Function to let user know if they are hot or cold
     function guessFeedback(secretNumber, guessedNumber) {
@@ -34,6 +38,18 @@ $(document).ready(function () {
         }
     }
 
+    // Function to provide relative feedback to the user
+    function relativeFeedback(secretNumber, oldGuess, newGuess) {
+        var oldDiff = parseInt(Math.abs(secretNumber - oldGuess));
+        var newDiff = parseInt(Math.abs(secretNumber - newGuess));
+        if (newDiff > oldDiff) {
+            $('#relative-feedback').text('Wrong way! You are getting colder.');
+        } else if (newDiff === oldDiff) {
+            $('#relative-feedback').text('You are as far as your previous guess!');
+        } else {
+            $('#relative-feedback').text('That is the ticket! Now you are hotter.');
+        }
+    }
 
     // Function to countdown number of guesses
     function guessCounter(counter) {
@@ -73,11 +89,33 @@ $(document).ready(function () {
         guessCounter(counter);
     }
 
+    $('.new').on('click', newGame);
+
     $('#guessButton').on('click', function () {
         var guessedNumber = parseInt($('#userGuess').val(), 10);
         var newGuess = parseInt(guessedNumber);
 
         validation(guessedNumber);
+
+        if (oldGuess !== 0 && guessedNumber >= 1 && guessedNumber <= 100) {
+            relativeFeedback(secretNumber, oldGuess, newGuess);
+        }
+        oldGuess = newGuess;
+    });
+
+    $('#userGuess').on('keypress', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            var guessedNumber = parseInt($('#userGuess').val(), 10);
+            var newGuess = parseInt(guessedNumber);
+
+            validation(guessedNumber);
+
+            if (oldGuess !== 0 && guessedNumber >= 1 && guessedNumber <= 100) {
+                relativeFeedback(secretNumber, oldGuess, newGuess);
+            }
+            oldGuess = newGuess;
+        }
     });
 
     // Display information modal box
