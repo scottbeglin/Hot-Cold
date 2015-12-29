@@ -15,11 +15,6 @@ $(document).ready(function () {
     var counter = 20;
     $('#count').text(counter);
 
-    // Function to start new game
-    function newGame() {
-        $('.new').click(newGame);
-        document.new.reload;
-    }
 
     // Function to let user know if they are hot or cold
     function guessFeedback(secretNumber, guessedNumber) {
